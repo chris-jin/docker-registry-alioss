@@ -7,9 +7,9 @@ AUTHOR: Chris Jin <chrisjin@outlook.com>
 FROM	registry:0.8.1
 
 # Packaged dependencies
-RUN	apt-get update && apt-get install -y wget unzip 
+RUN	apt-get update && apt-get install -y wget unzip
 
-#get ali-oss api 
+#get ali-oss api
 RUN mkdir -p /ali_oss/api && cd /ali_oss/api \
         && wget http://aliyunecs.oss-cn-hangzhou.aliyuncs.com/OSS_Python_API_20140509.zip \
         && unzip OSS_Python_API_20140509.zip && sudo python setup.py install
@@ -28,6 +28,7 @@ RUN echo 'oss: &oss' >> /docker-registry/config/config.yml
 RUN echo '    <<: *common' >> /docker-registry/config/config.yml
 RUN echo '    storage: alioss' >> /docker-registry/config/config.yml
 RUN echo '    storage_path: _env:STORAGE_PATH:/devregistry/' >> /docker-registry/config/config.yml
+RUN echo '    oss_host: _env:OSS_HOST' >> /docker-registry/config/config.yml
 RUN echo '    oss_bucket: _env:OSS_BUCKET' >> /docker-registry/config/config.yml
 RUN echo '    oss_accessid: _env:OSS_KEY' >> /docker-registry/config/config.yml
 RUN echo '    oss_accesskey: _env:OSS_SECRET' >> /docker-registry/config/config.yml
@@ -35,6 +36,6 @@ RUN echo '    oss_accesskey: _env:OSS_SECRET' >> /docker-registry/config/config.
 #set env
 env DOCKER_REGISTRY_CONFIG /docker-registry/config/config.yml
 env SETTINGS_FLAVOR oss
-RUN unset SEARCH_BACKEND  
+RUN unset SEARCH_BACKEND
 
 cmd exec docker-registry
